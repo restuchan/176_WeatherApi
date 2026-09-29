@@ -1,2 +1,4 @@
-link github Pages:
-<img width="2872" height="1552" alt="image" src="https://github.com/user-attachments/assets/bb1ea65c-ddbb-411c-97d7-a01ee6824c04" />
+
+<img width="1920" height="1008" alt="Cuplikan layar 2026-09-29 162410" src="https://github.com/user-attachments/assets/691341c9-9dc3-45e4-b3ab-155a377cbddd" />
+
+<img width="1920" height="1008" alt="Cuplikan layar 2026-09-29 162727" src="https://github.com/user-attachments/assets/f4170594-1863-4c97-98e3-14e127e618f2" />
