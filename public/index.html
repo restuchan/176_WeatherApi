@@ -1,49 +1,182 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geolocation</title>
+    <title>PWS 29 September 2026</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent: #00A19C; /* Aksen Teal Modern */
+            --accent-hover: #008783;
+            --border-color: #333333;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: var(--bg-color); 
+            color: var(--text-main);
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px; 
+        }
+
+        .card { 
+            background: var(--card-bg); 
+            padding: 32px; 
+            border-radius: 16px; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); 
+            width: 100%;
+            max-width: 420px; 
+            border: 1px solid var(--border-color);
+        }
+
+        h2 { 
+            margin: 0 0 8px; 
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent);
+            letter-spacing: 0.5px;
+            text-align: center;
+        }
+
+        .id { 
+            color: var(--text-muted); 
+            font-size: 0.9rem;
+            margin-bottom: 24px; 
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        input { 
+            flex: 1;
+            padding: 12px 16px; 
+            background: var(--bg-color);
+            border: 1px solid var(--border-color); 
+            color: var(--text-main);
+            border-radius: 8px; 
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 161, 156, 0.2);
+        }
+
+        input::placeholder {
+            color: var(--text-muted);
+        }
+
+        button { 
+            padding: 12px 20px; 
+            border: 0; 
+            background: var(--accent); 
+            color: #fff; 
+            font-weight: 600;
+            border-radius: 8px; 
+            cursor: pointer; 
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        button:hover {
+            background: var(--accent-hover);
+        }
+
+        button:active {
+            transform: scale(0.96);
+        }
+
+        .table-container {
+            background: var(--bg-color);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+        }
+
+        td { 
+            padding: 12px 16px; 
+            border-bottom: 1px solid var(--border-color); 
+            font-size: 0.95rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        td:first-child { 
+            color: var(--text-muted); 
+            width: 35%; 
+            font-weight: 500;
+        }
+
+        td:last-child {
+            font-weight: 500;
+            color: var(--text-main);
+        }
+    </style>
 </head>
-
 <body>
+    <div class="card">
+        <h2>PWS 29 September 2026</h2>
+        <div class="id">Nama: Restu Chandra Fitrianto | NIM: 20240140176</div>
 
-    <h3>Nama : </h3>
-    <h3>NIM : </h3>
+        <div class="search-box">
+            <input type="text" id="inputLokasi" placeholder="Contoh: Kasihan Bantul">
+            <button onclick="cari()">Cari</button>
+        </div>
 
-    <p>
-        Kota :
-        <span id="lokasi"></span>
-    </p>
-
-    <hr>
-
-    <p>
-        Koordinat :
-        <span id="negara"></span>
-    </p>
+        <div class="table-container">
+            <table>
+                <tr><td>Lokasi</td><td id="lokasi">-</td></tr>
+                <tr><td>Negara</td><td id="negara">-</td></tr>
+                <tr><td>Provinsi</td><td id="provinsi">-</td></tr>
+                <tr><td>Kecamatan</td><td id="kecamatan">-</td></tr>
+                <tr><td>Longitude</td><td id="longitude">-</td></tr>
+                <tr><td>Latitude</td><td id="latitude">-</td></tr>
+            </table>
+        </div>
+    </div>
 
     <script>
+        document.getElementById("inputLokasi").addEventListener("keydown", e => {
+            if (e.key === "Enter") cari();
+        });
 
-        fetch("/api/lokasi")
-            .then(response => response.json())
-            .then(data => {
+        function cari() {
+            const q = document.getElementById("inputLokasi").value.trim();
+            if (!q) return alert("Silakan isi nama lokasi terlebih dahulu");
 
-                console.log(data);
+            fetch(`/api/lokasi?q=${encodeURIComponent(q)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.message) return alert(data.message);
 
-                document.getElementById("lokasi").innerHTML = data.kota;
-
-                document.getElementById("negara").innerHTML =
-                    data.koordinat;
-
-            })
-            .catch(error => {
-
-                console.error(error);
-
-            });
-
+                    for (const key of ["lokasi", "negara", "provinsi", "kecamatan", "longitude", "latitude"]) {
+                        document.getElementById(key).innerText = data[key] || "-";
+                    }
+                })
+                .catch(err => console.error(err));
+        }
     </script>
-
 </body>
 </html>
