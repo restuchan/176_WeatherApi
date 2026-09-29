@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cari Lokasi</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #eef2f7; display: flex; justify-content: center; padding: 40px; }
+        .card { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,.1); width: 380px; }
+        h2 { margin: 0 0 4px; }
+        .id { color: #666; margin-bottom: 20px; }
+        input { width: 68%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
+        button { padding: 10px 14px; border: 0; background: #2563eb; color: #fff; border-radius: 6px; cursor: pointer; }
+        table { width: 100%; margin-top: 20px; border-collapse: collapse; }
+        td { padding: 8px 4px; border-bottom: 1px solid #eee; }
+        td:first-child { color: #666; width: 40%; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Cari Lokasi</h2>
+        <div class="id">Nama: NAMAMU | NIM: NIMMU</div>
+
+        <input type="text" id="inputLokasi" placeholder="Contoh: Laweyan Surakarta">
+        <button onclick="cari()">Cari</button>
+
+        <table>
+            <tr><td>Lokasi</td><td id="lokasi">-</td></tr>
+            <tr><td>Negara</td><td id="negara">-</td></tr>
+            <tr><td>Provinsi</td><td id="provinsi">-</td></tr>
+            <tr><td>Kecamatan</td><td id="kecamatan">-</td></tr>
+            <tr><td>Longitude</td><td id="longitude">-</td></tr>
+            <tr><td>Latitude</td><td id="latitude">-</td></tr>
+        </table>
+    </div>
+
+    <script>
+        const apiKey = "KEY_MAPTILER_KAMU";
+
+        document.getElementById("inputLokasi").addEventListener("keydown", e => {
+            if (e.key === "Enter") cari();
+        });
+
+        async function cari() {
+            const q = document.getElementById("inputLokasi").value.trim();
+            if (!q) return alert("Isi lokasi dulu");
+
+            const url = `https://api.maptiler.com/geocoding/${encodeURIComponent(q)}.json?key=${apiKey}`;
+
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                const f = data.features && data.features[0];
+                if (!f) return alert("Lokasi tidak ditemukan");
+
+                const cari = (tipe) => {
+                    if (f.place_type && f.place_type.includes(tipe)) return f.text;
+                    const c = (f.context || []).find(x => x.id.startsWith(tipe));
+                    return c ? c.text : null;
+                };
+
+                const tipeKecamatan = ["municipal_district", "municipality", "joint_municipality", "county", "subregion", "locality"];
+                let kecamatan = "-";
+                for (const t of tipeKecamatan) {
+                    const hasil = cari(t);
+                    if (hasil) { kecamatan = hasil; break; }
+                }
+
+                document.getElementById("lokasi").innerText = f.place_name;
+                document.getElementById("negara").innerText = cari("country") || "-";
+                document.getElementById("provinsi").innerText = cari("region") || "-";
+                document.getElementById("kecamatan").innerText = kecamatan;
+                document.getElementById("longitude").innerText = f.geometry.coordinates[0];
+                document.getElementById("latitude").innerText = f.geometry.coordinates[1];
+            } catch (err) {
+                console.error(err);
+                alert("Gagal mengambil data dari MapTiler");
+            }
+        }
+    </script>
+</body>
+</html>
