@@ -9,9 +9,11 @@ const apiKey = "4tM4hEwvm5O8DBVqbAxT";
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/api/lokasi", async (req, res) => {
-    const kota = "jakarta";
+    const kota = req.query.q;
 
-    
+    if (!kota) {
+        return res.status(400).json({ message: "Lokasi wajib diisi" });
+    }
 
     const url = `https://api.maptiler.com/geocoding/${kota}.json?key=${apiKey}`;
 
