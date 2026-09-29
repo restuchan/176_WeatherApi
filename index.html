@@ -3,35 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cari Lokasi</title>
+    <title>PWS 29 September 2026</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #eef2f7; display: flex; justify-content: center; padding: 40px; }
-        .card { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,.1); width: 380px; }
-        h2 { margin: 0 0 4px; }
-        .id { color: #666; margin-bottom: 20px; }
-        input { width: 68%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
-        button { padding: 10px 14px; border: 0; background: #2563eb; color: #fff; border-radius: 6px; cursor: pointer; }
-        table { width: 100%; margin-top: 20px; border-collapse: collapse; }
-        td { padding: 8px 4px; border-bottom: 1px solid #eee; }
-        td:first-child { color: #666; width: 40%; }
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent: #00A19C;
+            --accent-hover: #008783;
+            --border-color: #333333;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: var(--bg-color); 
+            color: var(--text-main);
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px; 
+        }
+
+        .card { 
+            background: var(--card-bg); 
+            padding: 32px; 
+            border-radius: 16px; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); 
+            width: 100%;
+            max-width: 420px; 
+            border: 1px solid var(--border-color);
+        }
+
+        h2 { 
+            margin: 0 0 8px; 
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--accent);
+            letter-spacing: 0.5px;
+            text-align: center; /* Ditengahkan */
+        }
+
+        .id { 
+            color: var(--text-muted); 
+            font-size: 0.9rem;
+            margin-bottom: 24px; 
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+            text-align: center; /* Ditengahkan */
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        input { 
+            flex: 1;
+            padding: 12px 16px; 
+            background: var(--bg-color);
+            border: 1px solid var(--border-color); 
+            color: var(--text-main);
+            border-radius: 8px; 
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 161, 156, 0.2);
+        }
+
+        input::placeholder {
+            color: var(--text-muted);
+        }
+
+        button { 
+            padding: 12px 20px; 
+            border: 0; 
+            background: var(--accent); 
+            color: #fff; 
+            font-weight: 600;
+            border-radius: 8px; 
+            cursor: pointer; 
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        button:hover {
+            background: var(--accent-hover);
+        }
+
+        button:active {
+            transform: scale(0.96);
+        }
+
+        .table-container {
+            background: var(--bg-color);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+        }
+
+        td { 
+            padding: 12px 16px; 
+            border-bottom: 1px solid var(--border-color); 
+            font-size: 0.95rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        td:first-child { 
+            color: var(--text-muted); 
+            width: 35%; 
+            font-weight: 500;
+        }
+
+        td:last-child {
+            font-weight: 500;
+            color: var(--text-main);
+        }
     </style>
 </head>
 <body>
     <div class="card">
-        <h2>Cari Lokasi</h2>
-        <div class="id">Nama: Restu Chan | NIM: NIMMU</div>
+        <h2>PWS 29 September 2026</h2>
+        <div class="id">Nama: Restu Chandra Fitrianto | NIM: 20240140176</div>
 
-        <input type="text" id="inputLokasi" placeholder="Contoh: Laweyan Surakarta">
-        <button onclick="cari()">Cari</button>
+        <div class="search-box">
+            <input type="text" id="inputLokasi" placeholder="Contoh: Kasihan Bantul">
+            <button onclick="cari()">Cari</button>
+        </div>
 
-        <table>
-            <tr><td>Lokasi</td><td id="lokasi">-</td></tr>
-            <tr><td>Negara</td><td id="negara">-</td></tr>
-            <tr><td>Provinsi</td><td id="provinsi">-</td></tr>
-            <tr><td>Kecamatan</td><td id="kecamatan">-</td></tr>
-            <tr><td>Longitude</td><td id="longitude">-</td></tr>
-            <tr><td>Latitude</td><td id="latitude">-</td></tr>
-        </table>
+        <div class="table-container">
+            <table>
+                <tr><td>Lokasi</td><td id="lokasi">-</td></tr>
+                <tr><td>Negara</td><td id="negara">-</td></tr>
+                <tr><td>Provinsi</td><td id="provinsi">-</td></tr>
+                <tr><td>Kecamatan</td><td id="kecamatan">-</td></tr>
+                <tr><td>Longitude</td><td id="longitude">-</td></tr>
+                <tr><td>Latitude</td><td id="latitude">-</td></tr>
+            </table>
+        </div>
     </div>
 
     <script>
@@ -43,7 +166,7 @@
 
         async function cari() {
             const q = document.getElementById("inputLokasi").value.trim();
-            if (!q) return alert("Isi lokasi dulu");
+            if (!q) return alert("Silakan isi nama lokasi terlebih dahulu");
 
             const url = `https://api.maptiler.com/geocoding/${encodeURIComponent(q)}.json?key=${apiKey}`;
 
@@ -53,22 +176,23 @@
                 const f = data.features && data.features[0];
                 if (!f) return alert("Lokasi tidak ditemukan");
 
-                const cari = (tipe) => {
+                const cariTipe = (tipe) => {
                     if (f.place_type && f.place_type.includes(tipe)) return f.text;
                     const c = (f.context || []).find(x => x.id.startsWith(tipe));
                     return c ? c.text : null;
                 };
 
-                const tipeKecamatan = ["municipal_district", "municipality", "joint_municipality", "county", "subregion", "locality"];
+                // Array yang sudah diperbaiki (menghilangkan county)
+                const tipeKecamatan = ["locality", "subregion", "municipal_district", "municipality", "joint_municipality"];
                 let kecamatan = "-";
                 for (const t of tipeKecamatan) {
-                    const hasil = cari(t);
+                    const hasil = cariTipe(t);
                     if (hasil) { kecamatan = hasil; break; }
                 }
 
-                document.getElementById("lokasi").innerText = f.place_name;
-                document.getElementById("negara").innerText = cari("country") || "-";
-                document.getElementById("provinsi").innerText = cari("region") || "-";
+                document.getElementById("lokasi").innerText = f.place_name || "-";
+                document.getElementById("negara").innerText = cariTipe("country") || "-";
+                document.getElementById("provinsi").innerText = cariTipe("region") || "-";
                 document.getElementById("kecamatan").innerText = kecamatan;
                 document.getElementById("longitude").innerText = f.geometry.coordinates[0];
                 document.getElementById("latitude").innerText = f.geometry.coordinates[1];
